@@ -19,7 +19,7 @@ public class SCR_PerlinNoiseMap : MonoBehaviour
     List<List<int>> noiseGrid = new List<List<int>>();
     List<List<GameObject>> tileGrid = new List<List<GameObject>>();
 
-    float magnification = 7;
+    public float magnification = 7;
 
     int xOffset = 0;    // <- +>
     int yOffset = 0;    // v- +^
