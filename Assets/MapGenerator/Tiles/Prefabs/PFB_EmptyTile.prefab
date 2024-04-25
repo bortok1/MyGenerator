@@ -178,6 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3023862323266432273}
   - component: {fileID: 4228061864229966438}
+  - component: {fileID: 1812720348154856605}
   m_Layer: 0
   m_Name: PFB_EmptyTile
   m_TagString: MapTile
@@ -223,3 +224,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1812720348154856605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2916063834908171867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8d3e8f768a64e141b445e3c25250e45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxOrthographicSize: 17
