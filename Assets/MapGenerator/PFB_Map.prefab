@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f57137418845c7448a71c5fb35659903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grass: {fileID: 3743890061879939200, guid: 1bc0bdd29ba7ab149b25b01b249a7fbe, type: 3}
-  desert: {fileID: 2916063834908171867, guid: ade62fd34859cca43a8b0bab405dbeec, type: 3}
-  river: {fileID: 6123607153880336191, guid: f0c562d2f75df7f44beb4082c27285eb, type: 3}
-  forest: {fileID: 6384435678945874471, guid: 66ce36ea8127e9641a59972d18ebb338, type: 3}
+  grass: {fileID: 6123607153880336191, guid: f0c562d2f75df7f44beb4082c27285eb, type: 3}
+  desert: {fileID: 3743890061879939200, guid: 1bc0bdd29ba7ab149b25b01b249a7fbe, type: 3}
+  river: {fileID: 6384435678945874471, guid: 66ce36ea8127e9641a59972d18ebb338, type: 3}
+  forest: {fileID: 4656532338786025235, guid: fe6bda8932af5934f870a3c5cc0dca0d, type: 3}
+  magnification: 7

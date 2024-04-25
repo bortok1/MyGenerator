@@ -65,9 +65,9 @@ public class SCR_PerlinNoiseMap : MonoBehaviour
         float clampPerlin = Mathf.Clamp(perlin, 0.0f, 1.0f);
         float scalePerlin = clampPerlin * tileSet.Count;
 
-        if(scalePerlin == 4)
+        if(scalePerlin == tileSet.Count)
         {
-            scalePerlin = 3.0f;
+            scalePerlin--;
         }
 
         return Mathf.FloorToInt(scalePerlin);
@@ -88,9 +88,9 @@ public class SCR_PerlinNoiseMap : MonoBehaviour
     void CreateTileset()
     {
         tileSet = new Dictionary<int, GameObject>();
-        tileSet.Add(0, grass);
-        tileSet.Add(1, desert);
-        tileSet.Add(2, river);
-        tileSet.Add(3, forest);
+        tileSet.Add(1, grass);
+        tileSet.Add(3, desert);
+        tileSet.Add(0, river);
+        tileSet.Add(2, forest);
     }
 }
