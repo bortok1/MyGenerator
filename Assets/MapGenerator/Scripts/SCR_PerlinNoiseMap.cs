@@ -6,18 +6,18 @@ public class SCR_PerlinNoiseMap : MonoBehaviour
     Dictionary<int, GameObject> tileSet;
     Dictionary<int, GameObject> tileGroups;
 
-    public GameObject grass;
-    public GameObject desert;
-    public GameObject river;
-    public GameObject forest;
+    [SerializeField] GameObject grass;
+    [SerializeField] GameObject desert;
+    [SerializeField] GameObject river;
+    [SerializeField] GameObject forest;
 
-    int mapWidth = 160;
-    int mapHeight = 90;
+    public int mapWidth = 160;
+    public int mapHeight = 90;
 
-    List<List<int>> noiseGrid = new List<List<int>>();
-    List<List<GameObject>> tileGrid = new List<List<GameObject>>();
+    List<List<int>> noiseGrid = new();
+    List<List<GameObject>> tileGrid = new();
 
-    public float magnification = 7;
+    [SerializeField] float magnification = 7;
 
     int xOffset = 0;    // <- +>
     int yOffset = 0;    // v- +^
@@ -90,5 +90,16 @@ public class SCR_PerlinNoiseMap : MonoBehaviour
         tileSet.Add(3, desert);
         tileSet.Add(0, river);
         tileSet.Add(2, forest);
+    }
+
+    public GameObject GetTile(int x, int y)
+    {
+        return tileGrid[x][y];
+    }
+
+    public void DestroyTile(int x, int y)
+    {
+        Destroy(tileGrid[x][y]);
+        tileGrid[x][y] = null;
     }
 }

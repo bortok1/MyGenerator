@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5502347493727306823}
   - component: {fileID: 5565181271926476385}
+  - component: {fileID: 2015916497551005176}
+  - component: {fileID: 8918197173665766850}
   m_Layer: 0
   m_Name: PFB_Map
   m_TagString: Untagged
@@ -48,4 +50,33 @@ MonoBehaviour:
   desert: {fileID: 3743890061879939200, guid: 1bc0bdd29ba7ab149b25b01b249a7fbe, type: 3}
   river: {fileID: 6384435678945874471, guid: 66ce36ea8127e9641a59972d18ebb338, type: 3}
   forest: {fileID: 4656532338786025235, guid: fe6bda8932af5934f870a3c5cc0dca0d, type: 3}
-  magnification: 7
+  mapWidth: 160
+  mapHeight: 90
+  magnification: 14
+--- !u!114 &2015916497551005176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8783387094406892922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 753b0eb013e906340beb2bca24bc6205, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8918197173665766850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8783387094406892922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7796b4bde8c2f6d4aa1145812ff9190c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  castle: {fileID: 2361631575721027615, guid: 1b119ebe15b797c4d83b38abcda96357, type: 3}
+  bJustAddSomePlacesForMe: 1
+  places: []
