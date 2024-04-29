@@ -123,24 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &163500433 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8783387094406892922, guid: 47e9c59e88ca19542988cd36581fe7ce, type: 3}
-  m_PrefabInstance: {fileID: 387608109}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &163500436
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 163500433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 753b0eb013e906340beb2bca24bc6205, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  thing: {fileID: 3743890061879939200, guid: 1bc0bdd29ba7ab149b25b01b249a7fbe, type: 3}
 --- !u!1001 &387608109
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -150,8 +132,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4336011145996516479, guid: 47e9c59e88ca19542988cd36581fe7ce, type: 3}
-      propertyPath: randomPlacesToAdd
-      value: 2
+      propertyPath: mapWidth
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4336011145996516479, guid: 47e9c59e88ca19542988cd36581fe7ce, type: 3}
+      propertyPath: mapHeight
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 5502347493727306823, guid: 47e9c59e88ca19542988cd36581fe7ce, type: 3}
       propertyPath: m_LocalPosition.x
@@ -200,10 +186,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8783387094406892922, guid: 47e9c59e88ca19542988cd36581fe7ce, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 163500436}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47e9c59e88ca19542988cd36581fe7ce, type: 3}
 --- !u!1 &619394800
 GameObject:
@@ -295,6 +278,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 184376863260416570, guid: 105679f499f4f3f4cb72a07fcd6f2213, type: 3}
+      propertyPath: scrollSpeed
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4122740526961909099, guid: 105679f499f4f3f4cb72a07fcd6f2213, type: 3}
       propertyPath: m_Name
       value: PFB_CameraPlayer

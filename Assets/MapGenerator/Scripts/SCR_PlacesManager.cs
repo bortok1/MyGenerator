@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class SCR_PlacesRandomiser
+public static class SCR_PlacesManager
 {
     public static List<Tile> AddRandomPlaces(int randomPlacesToAdd, int mapWidth, int mapHeight, List<TileType> tileTypes)
     {

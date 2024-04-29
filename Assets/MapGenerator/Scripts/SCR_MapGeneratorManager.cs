@@ -29,6 +29,11 @@ public struct TileType
         this.prefab = prefab;
         this.isSpecialPlace = isSpecialPlace;
     }
+
+    public bool Equals(TileType tile)
+    {
+        return this.group.Equals(tile.group);
+    }
 }
 
 
@@ -45,13 +50,24 @@ public class SCR_MapGeneratorManager : MonoBehaviour
     [SerializeField] GameObject grass;
     [SerializeField] GameObject forest;
     [SerializeField] GameObject desert;
-    
+
     [SerializeField] GameObject castle;
-    [SerializeField] GameObject road;
+
+    [SerializeField] GameObject roadDL;
+    [SerializeField] GameObject roadDR;
+    [SerializeField] GameObject roadLR;
+    [SerializeField] GameObject roadTD;
+    [SerializeField] GameObject roadTL;
+    [SerializeField] GameObject roadTR;
+    [SerializeField] GameObject roadTU;
+    [SerializeField] GameObject roadUD;
+    [SerializeField] GameObject roadUL;
+    [SerializeField] GameObject roadUR;
+    [SerializeField] GameObject roadX;
 
     // --------------------------------------------
 
-    [SerializeField] int randomPlacesToAdd = 5;
+    [SerializeField] int randomPlacesToAdd = 20;
     List<Tile> specialPlaces = new();
 
     // --------------------------------------------
@@ -59,7 +75,7 @@ public class SCR_MapGeneratorManager : MonoBehaviour
     public int mapWidth = 160;
     public int mapHeight = 90;
 
-    public int magnification = 7;
+    public int magnification = 14;
 
     public int xOffset = 0;    // <- +>
     public int yOffset = 0;    // v- +^
@@ -71,14 +87,55 @@ public class SCR_MapGeneratorManager : MonoBehaviour
     {
         CreateTileTypes();
 
-        dataMapGrid = SCR_PerlinNoiseMap.GenerateMap(mapWidth, mapHeight, xOffset, yOffset, magnification, tileTypes);
+        // Terrain data grid
+        dataMapGrid = SCR_PerlinNoiseMap.GenerateDataGrid(mapWidth, mapHeight, xOffset, yOffset, magnification, tileTypes);
 
+
+        // Special places
         if (randomPlacesToAdd != 0)
-            specialPlaces.AddRange(SCR_PlacesRandomiser.AddRandomPlaces(randomPlacesToAdd, mapWidth, mapHeight, tileTypes));
+            specialPlaces.AddRange(SCR_PlacesManager.AddRandomPlaces(randomPlacesToAdd, mapWidth, mapHeight, tileTypes));
 
-        dataMapGrid = SCR_PlacesRandomiser.PlacePlaces(specialPlaces, dataMapGrid);
-        dataMapGrid = GetComponent<SCR_RoadGenerator>().GenerateRoad(dataMapGrid, specialPlaces[0], specialPlaces[1], tileTypes);
+        dataMapGrid = SCR_PlacesManager.PlacePlaces(specialPlaces, dataMapGrid);
+
+        // Road
+        RandomiseRoadConnections();
+
+        // Final map of GameObjects
         GenerateMap();
+    }
+
+    private void RandomiseRoadConnections() // between special places
+    {
+        if (specialPlaces.Count < 2) return;
+
+        List<int> connected = new();
+
+        for (int i = 0; i < specialPlaces.Count; i++)
+        {
+            if (connected.Contains(i))
+                continue;
+
+            int connection;
+            do
+            {
+                connection = Random.Range(0, specialPlaces.Count);
+            } while (connection == i);
+
+            connected.Add(connection);
+
+            PutPathOnDataGrid(SCR_RoadGenerator.FindBestNode(dataMapGrid, specialPlaces[i], specialPlaces[connection]));
+        }
+    }
+
+    private void PutPathOnDataGrid(PathNode node)
+    {
+        if (node.cameFromNode == null)
+            return;
+        
+        if(!dataMapGrid[node.tile.X][node.tile.Y].type.isSpecialPlace)
+            dataMapGrid[node.tile.X][node.tile.Y] = new Tile(node.tile.X, node.tile.Y, tileTypes[tileTypes.Count - 1]);
+
+        PutPathOnDataGrid(node.cameFromNode);
     }
 
     void GenerateMap()
@@ -95,7 +152,18 @@ public class SCR_MapGeneratorManager : MonoBehaviour
 
     private void CreateSingleTile(Tile singleTile)
     {
-        GameObject createdTile = Instantiate(singleTile.type.prefab, singleTile.type.group.transform);
+        GameObject prefab = null;
+
+        if(singleTile.type.Equals(tileTypes[tileTypes.Count - 1]))  // is a road
+        {
+            prefab = ChooseRoadTile(singleTile);
+        }
+        else
+        {
+            prefab = singleTile.type.prefab;
+        }
+
+        GameObject createdTile = Instantiate(prefab, singleTile.type.group.transform);
 
         createdTile.name = string.Format("tile_x({0})_y({1})", singleTile.X, singleTile.Y);
         createdTile.transform.localPosition = new Vector3(singleTile.X, singleTile.Y, 0);
@@ -103,15 +171,92 @@ public class SCR_MapGeneratorManager : MonoBehaviour
         tileMapGrid[singleTile.X].Add(createdTile);
     }
 
+    private GameObject ChooseRoadTile(Tile singleTile)
+    {
+        // in 4 bit variable
+        // if road up set 2^0 to 1
+        // if road down set 2^1 to 1
+        // if road left set 2^2 to 1
+        // if road right set 2^3 to 1
+
+        int dir = 0;
+
+        TileType neighbourType;
+
+        if (singleTile.Y + 1 < dataMapGrid[singleTile.X].Count)
+        {
+            neighbourType = dataMapGrid[singleTile.X][singleTile.Y + 1].type;
+            if (singleTile.Y + 1 < dataMapGrid[singleTile.X].Count &&
+                neighbourType.Equals(singleTile.type) ||
+                neighbourType.isSpecialPlace)
+            {
+                dir += 1;
+            }
+        }
+
+        if (singleTile.Y - 1 >= 0)
+        {
+            neighbourType = dataMapGrid[singleTile.X][singleTile.Y - 1].type;
+            if (singleTile.Y - 1 >= 0 &&
+                neighbourType.Equals(singleTile.type) ||
+                neighbourType.isSpecialPlace)
+            {
+                dir += 2;
+            }
+        }
+
+        if (singleTile.X - 1 >= 0)
+        {
+            neighbourType = dataMapGrid[singleTile.X - 1][singleTile.Y].type;
+            if (singleTile.X - 1 >= 0 &&
+                neighbourType.Equals(singleTile.type) ||
+                neighbourType.isSpecialPlace)
+            {
+                dir += 4;
+            }
+        }
+
+        if (singleTile.X + 1 < dataMapGrid.Count)
+        {
+            neighbourType = dataMapGrid[singleTile.X + 1][singleTile.Y].type;
+            if (singleTile.X + 1 < dataMapGrid.Count &&
+                neighbourType.Equals(singleTile.type) ||
+                neighbourType.isSpecialPlace)
+            {
+                dir += 8;
+            }
+        }
+
+        switch (dir)
+        {
+            case 6: return roadDL; 
+            case 10: return roadDR; 
+            case 14: return roadTD; 
+            case 7: return roadTL; 
+            case 11: return roadTR; 
+            case 13: return roadTU; 
+            case 1:
+            case 2:
+            case 3: return roadUD; 
+            case 5: return roadUL; 
+            case 9: return roadUR; 
+            case 15: return roadX; 
+            case 4:
+            case 8:
+            case 12: 
+            default: return roadLR; 
+        }
+    }
+
     private void CreateTileTypes() 
     {
         tileTypes = new();
-        tileTypes.Add(new TileType(new GameObject("River"), 50, river, false));
-        tileTypes.Add(new TileType(new GameObject("Grass"), 10, grass, false));
-        tileTypes.Add(new TileType(new GameObject("Forest"), 20, forest, false));
-        tileTypes.Add(new TileType(new GameObject("Desert"), 30, desert, false));
+        tileTypes.Add(new TileType(new GameObject("River"), 200, river, false));
+        tileTypes.Add(new TileType(new GameObject("Grass"), 30, grass, false));
+        tileTypes.Add(new TileType(new GameObject("Forest"), 60, forest, false));
+        tileTypes.Add(new TileType(new GameObject("Desert"), 90, desert, false));
         tileTypes.Add(new TileType(new GameObject("Castle"), 1, castle, true));
-        tileTypes.Add(new TileType(new GameObject("Road"), 1, road, true));
+        tileTypes.Add(new TileType(new GameObject("Road"), 1, roadLR, true));     // Road has to be the last one
 
         foreach(TileType tileType in tileTypes)
             tileType.group.transform.parent = this.transform;

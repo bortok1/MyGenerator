@@ -4,7 +4,7 @@ using UnityEngine;
 public static class SCR_PerlinNoiseMap
 {
     // Create terrain using Perlin noise
-    public static List<List<Tile>> GenerateMap(int mapWidth, int mapHeight, int xOffset, int yOffset, int magnification, List<TileType> tileTypes)
+    public static List<List<Tile>> GenerateDataGrid(int mapWidth, int mapHeight, int xOffset, int yOffset, int magnification, List<TileType> tileTypes)
     {
         int specialPlaces = 0;
         foreach (TileType tileType in tileTypes)

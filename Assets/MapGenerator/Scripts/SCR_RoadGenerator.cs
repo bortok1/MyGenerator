@@ -2,31 +2,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class SCR_RoadGenerator : MonoBehaviour
+public static class SCR_RoadGenerator
 {
-    [SerializeField] GameObject thing;
-
-    public List<List<Tile>> GenerateRoad(List<List<Tile>> dataMapGrid, Tile placeA, Tile placeB, List<TileType> tileTypes)
+    public static PathNode FindBestNode(List<List<Tile>> dataMapGrid, Tile placeA, Tile placeB)
     {
-        PathNode startNode = new PathNode(placeA, placeB, null);
-        List<PathNode> openList = new List<PathNode> { startNode };
-        List<Tile> closedList = new List<Tile>{ startNode.tile };
+        PathNode node = new PathNode(placeA, placeB, null);
+        List<PathNode> openList = new List<PathNode> { node };
+        List<Tile> closedList = new List<Tile>{ node.tile };
 
         while (openList.Count > 0)
         {
-            PathNode node = GetLowestF(openList);
-            GameObject temporaryPath = Instantiate(thing, this.transform);
-            temporaryPath.transform.position = new Vector3(node.tile.X, node.tile.Y, 0);
+            node = GetLowestF(openList);
 
             if (node == null)
-                return dataMapGrid;
+                return null;
 
             if(node.Equals(placeB))
-            {
-                return CreatePath(dataMapGrid, node, tileTypes);
-            }
+                return node;
 
             openList.Remove(node);
+
+            // save neighbour nodes
             if (node.tile.X + 1 < dataMapGrid.Count)
             {
                 Tile tile = dataMapGrid[node.tile.X + 1][node.tile.Y];
@@ -66,22 +62,10 @@ public class SCR_RoadGenerator : MonoBehaviour
             closedList.Add(node.tile);
         }
 
-        return dataMapGrid;
+        return null;
     }
 
-    private List<List<Tile>> CreatePath(List<List<Tile>> dataMapGrid, PathNode node, List<TileType> tileTypes)
-    {
-        
-        return dataMapGrid;
-    }
-
-    private List<PathNode> CheckNeighbours(List<List<Tile>> dataMapGrid, List<PathNode> openList, List<Tile> closedList, PathNode node, Tile placeB)
-    {
-        
-        return openList;
-    }
-
-    private PathNode GetLowestF(List<PathNode> openList)
+    private static PathNode GetLowestF(List<PathNode> openList)
     {
         int lowestFValue = int.MaxValue;
         PathNode bestNode = null;

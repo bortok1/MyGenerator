@@ -49,8 +49,18 @@ MonoBehaviour:
   forest: {fileID: 4656532338786025235, guid: fe6bda8932af5934f870a3c5cc0dca0d, type: 3}
   desert: {fileID: 3743890061879939200, guid: 1bc0bdd29ba7ab149b25b01b249a7fbe, type: 3}
   castle: {fileID: 2361631575721027615, guid: 1b119ebe15b797c4d83b38abcda96357, type: 3}
-  road: {fileID: 8990273262860705161, guid: 9c6e02b9e17f5aa4ab6241f7a1b58936, type: 3}
-  randomPlacesToAdd: 2
+  roadDL: {fileID: 3469738990989770012, guid: 9bd33ef45f4cc894289a7d8555f7208e, type: 3}
+  roadDR: {fileID: 3326317485778718475, guid: 031a10995cfb89f44a5403b8098616e7, type: 3}
+  roadLR: {fileID: 8990273262860705161, guid: 9c6e02b9e17f5aa4ab6241f7a1b58936, type: 3}
+  roadTD: {fileID: 9169318912501477602, guid: 72c0d223c69a20b42a26743df6ef597c, type: 3}
+  roadTL: {fileID: 602559247217612925, guid: d386e9c872b7b2e4e98dd1f6172a3e68, type: 3}
+  roadTR: {fileID: 3288080644090860364, guid: 461d045f1974faa4dbb84e4dcb3d263c, type: 3}
+  roadTU: {fileID: 8022323423855511114, guid: 7161eaf97a6a3c943a3b0b394a050552, type: 3}
+  roadUD: {fileID: 8227932262708843839, guid: 84cdf21089012b945a0953d937098160, type: 3}
+  roadUL: {fileID: 5257270722045108492, guid: 970119026cb056e4fbb38a9710779b7a, type: 3}
+  roadUR: {fileID: 3838953725848231307, guid: c746f3d4ad5cce14d97206bc12ab92bc, type: 3}
+  roadX: {fileID: 4526884914060827210, guid: fa081ed42a0ac474f97d4ea480b58794, type: 3}
+  randomPlacesToAdd: 20
   mapWidth: 160
   mapHeight: 90
   magnification: 14
