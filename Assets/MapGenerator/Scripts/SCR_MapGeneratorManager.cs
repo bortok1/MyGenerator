@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
 public struct Tile
 {
     public int X;
@@ -21,14 +20,14 @@ public struct TileType
     public GameObject group;
     public int weight;
     public GameObject prefab;
-    public bool isSpectialPlace;
+    public bool isSpecialPlace;
 
     public TileType(GameObject group, int weight, GameObject prefab, bool isSpecialPlace)
     {
         this.group = group;
         this.weight = weight;
         this.prefab = prefab;
-        this.isSpectialPlace = isSpecialPlace;
+        this.isSpecialPlace = isSpecialPlace;
     }
 }
 
@@ -38,7 +37,7 @@ public class SCR_MapGeneratorManager : MonoBehaviour
     List<List<GameObject>> tileMapGrid = new(); // Final map of GameObjects tiles
     List<List<Tile>> dataMapGrid = new();       // Map of structs tiles
 
-    List<TileType> tileTypes;
+    List<TileType> tileTypes = new();
 
     // --------------------------------------------
     
@@ -48,11 +47,12 @@ public class SCR_MapGeneratorManager : MonoBehaviour
     [SerializeField] GameObject desert;
     
     [SerializeField] GameObject castle;
+    [SerializeField] GameObject road;
 
     // --------------------------------------------
 
     [SerializeField] int randomPlacesToAdd = 5;
-    [SerializeField] List<Tile> specialPlaces = new();
+    List<Tile> specialPlaces = new();
 
     // --------------------------------------------
 
@@ -69,7 +69,7 @@ public class SCR_MapGeneratorManager : MonoBehaviour
 
     void Start()
     {
-        CreateTileTypes(); // Create groups for every tile type in scene hierarchy
+        CreateTileTypes();
 
         dataMapGrid = SCR_PerlinNoiseMap.GenerateMap(mapWidth, mapHeight, xOffset, yOffset, magnification, tileTypes);
 
@@ -77,7 +77,7 @@ public class SCR_MapGeneratorManager : MonoBehaviour
             specialPlaces.AddRange(SCR_PlacesRandomiser.AddRandomPlaces(randomPlacesToAdd, mapWidth, mapHeight, tileTypes));
 
         dataMapGrid = SCR_PlacesRandomiser.PlacePlaces(specialPlaces, dataMapGrid);
-
+        dataMapGrid = GetComponent<SCR_RoadGenerator>().GenerateRoad(dataMapGrid, specialPlaces[0], specialPlaces[1], tileTypes);
         GenerateMap();
     }
 
@@ -92,6 +92,7 @@ public class SCR_MapGeneratorManager : MonoBehaviour
             }
         }
     }
+
     private void CreateSingleTile(Tile singleTile)
     {
         GameObject createdTile = Instantiate(singleTile.type.prefab, singleTile.type.group.transform);
@@ -110,5 +111,9 @@ public class SCR_MapGeneratorManager : MonoBehaviour
         tileTypes.Add(new TileType(new GameObject("Forest"), 20, forest, false));
         tileTypes.Add(new TileType(new GameObject("Desert"), 30, desert, false));
         tileTypes.Add(new TileType(new GameObject("Castle"), 1, castle, true));
+        tileTypes.Add(new TileType(new GameObject("Road"), 1, road, true));
+
+        foreach(TileType tileType in tileTypes)
+            tileType.group.transform.parent = this.transform;
     }
 }

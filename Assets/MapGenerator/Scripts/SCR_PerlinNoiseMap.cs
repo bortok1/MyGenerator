@@ -9,7 +9,7 @@ public static class SCR_PerlinNoiseMap
         int specialPlaces = 0;
         foreach (TileType tileType in tileTypes)
         {
-            if (tileType.isSpectialPlace)
+            if (tileType.isSpecialPlace)
                 specialPlaces++;
         }
 

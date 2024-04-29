@@ -8,7 +8,7 @@ public static class SCR_PlacesRandomiser
         List<TileType> specialTypes = new();
         foreach(TileType tileType in tileTypes)
         {
-            if(tileType.isSpectialPlace)
+            if(tileType.isSpecialPlace)
                 specialTypes.Add(tileType);
         }
 
