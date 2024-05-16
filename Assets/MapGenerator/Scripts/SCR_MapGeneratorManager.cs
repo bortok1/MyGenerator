@@ -1,42 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Tile
-{
-    public int X;
-    public int Y;
-    public TileType type;
-
-    public Tile(int coordX, int coordY, TileType tileType)
-    {
-        X = coordX;
-        Y = coordY;
-        type = tileType;
-    }
-}
-
-public struct TileType
-{
-    public GameObject group;
-    public int weight;
-    public GameObject prefab;
-    public bool isSpecialPlace;
-
-    public TileType(GameObject group, int weight, GameObject prefab, bool isSpecialPlace)
-    {
-        this.group = group;
-        this.weight = weight;
-        this.prefab = prefab;
-        this.isSpecialPlace = isSpecialPlace;
-    }
-
-    public bool Equals(TileType tile)
-    {
-        return this.group.Equals(tile.group);
-    }
-}
-
-
 public class SCR_MapGeneratorManager : MonoBehaviour
 {
     List<List<GameObject>> tileMapGrid = new(); // Final map of GameObjects tiles
@@ -44,8 +8,10 @@ public class SCR_MapGeneratorManager : MonoBehaviour
 
     List<TileType> tileTypes = new();
 
-    // --------------------------------------------
     
+    Dictionary<int, GameObject> DirToPrefab;   // Assign direction value to prefab
+
+    #region Prefabs for tiles
     [SerializeField] GameObject river;
     [SerializeField] GameObject grass;
     [SerializeField] GameObject forest;
@@ -53,6 +19,10 @@ public class SCR_MapGeneratorManager : MonoBehaviour
 
     [SerializeField] GameObject castle;
 
+    // D = Down
+    // U = Up
+    // L = Left
+    // R = Right
     [SerializeField] GameObject roadDL;
     [SerializeField] GameObject roadDR;
     [SerializeField] GameObject roadLR;
@@ -64,23 +34,23 @@ public class SCR_MapGeneratorManager : MonoBehaviour
     [SerializeField] GameObject roadUL;
     [SerializeField] GameObject roadUR;
     [SerializeField] GameObject roadX;
+    #endregion
 
-    // --------------------------------------------
-
+    #region Variables for special places
     [SerializeField] int randomPlacesToAdd = 20;
     List<Tile> specialPlaces = new();
+    #endregion
 
-    // --------------------------------------------
-
+    #region Variables for whole map generation
     public int mapWidth = 160;
     public int mapHeight = 90;
 
     public int magnification = 14;
 
-    public int xOffset = 0;    // <- +>
-    public int yOffset = 0;    // v- +^
-
-    // --------------------------------------------
+    // Used to set offset for Perlin noise
+    public int xOffset = 0;    // to move left decrease to move right increase
+    public int yOffset = 0;    // to move left decrease to move right increase
+    #endregion
 
 
     void Start()
@@ -93,18 +63,21 @@ public class SCR_MapGeneratorManager : MonoBehaviour
 
         // Special places
         if (randomPlacesToAdd != 0)
-            specialPlaces.AddRange(SCR_PlacesManager.AddRandomPlaces(randomPlacesToAdd, mapWidth, mapHeight, tileTypes));
+            specialPlaces.AddRange(SCR_PlacesHelper.AddRandomPlaces(randomPlacesToAdd, mapWidth, mapHeight, tileTypes));
 
-        dataMapGrid = SCR_PlacesManager.PlacePlaces(specialPlaces, dataMapGrid);
+        dataMapGrid = SCR_PlacesHelper.PlacePlaces(specialPlaces, dataMapGrid);
 
         // Road
-        RandomiseRoadConnections();
+        SetRoadConnections();
+
+        // Set Dictionary used in placing roads
+        SetDirToPrefab();
 
         // Final map of GameObjects
         GenerateMap();
     }
 
-    private void RandomiseRoadConnections() // between special places
+    private void SetRoadConnections() // between special places
     {
         if (specialPlaces.Count < 2) return;
 
@@ -112,14 +85,17 @@ public class SCR_MapGeneratorManager : MonoBehaviour
 
         for (int i = 0; i < specialPlaces.Count; i++)
         {
-            if (connected.Contains(i))
-                continue;
+            if (connected.Contains(i)) continue;
 
-            int connection;
-            do
+            int connection = -1;
+            for (int j = i + 1; j < specialPlaces.Count; j++)
             {
-                connection = Random.Range(0, specialPlaces.Count);
-            } while (connection == i);
+                if (connected.Contains(j)) continue;
+
+                connection = j; break;
+            }
+
+            if (connection == -1) continue;
 
             connected.Add(connection);
 
@@ -154,7 +130,8 @@ public class SCR_MapGeneratorManager : MonoBehaviour
     {
         GameObject prefab = null;
 
-        if(singleTile.type.Equals(tileTypes[tileTypes.Count - 1]))  // is a road
+        bool isARoad = singleTile.type.Equals(tileTypes[tileTypes.Count - 1]);
+        if (isARoad)
         {
             prefab = ChooseRoadTile(singleTile);
         }
@@ -227,25 +204,19 @@ public class SCR_MapGeneratorManager : MonoBehaviour
             }
         }
 
-        switch (dir)
+        return DirToPrefab[dir];
+    }
+
+    private void SetDirToPrefab()
+    {
+        DirToPrefab = new()
         {
-            case 6: return roadDL; 
-            case 10: return roadDR; 
-            case 14: return roadTD; 
-            case 7: return roadTL; 
-            case 11: return roadTR; 
-            case 13: return roadTU; 
-            case 1:
-            case 2:
-            case 3: return roadUD; 
-            case 5: return roadUL; 
-            case 9: return roadUR; 
-            case 15: return roadX; 
-            case 4:
-            case 8:
-            case 12: 
-            default: return roadLR; 
-        }
+            { 1, roadUD },{ 2, roadUD },{ 3, roadUD },
+            { 4, roadLR },{ 5, roadUL },{ 6, roadDL },
+            { 7, roadTL },{ 8, roadLR },{ 9, roadUR },
+            { 10, roadDR },{ 11, roadTR },{ 12, roadLR },
+            { 13, roadTU },{ 14, roadTD },{ 15, roadX },
+        };
     }
 
     private void CreateTileTypes() 

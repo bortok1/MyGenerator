@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SCR_IsVisible : MonoBehaviour
+public class SCR_AnimationToggle: MonoBehaviour
 {
     // Turn off animation of this tile if player won't see it
 

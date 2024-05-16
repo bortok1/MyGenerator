@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -67,20 +68,8 @@ public static class SCR_RoadGenerator
 
     private static PathNode GetLowestF(List<PathNode> openList)
     {
-        int lowestFValue = int.MaxValue;
-        PathNode bestNode = null;
-
-        foreach(PathNode node in openList)
-        {
-            if(node.fCost < lowestFValue)
-            {
-                lowestFValue = node.fCost;
-                bestNode = node;
-            }
-        }
-        return bestNode;
+        return openList.OrderBy(node => node.fCost).FirstOrDefault();
     }
-
 }
 
 public class PathNode
